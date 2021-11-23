@@ -1,9 +1,13 @@
 const express = require("express");
+const helmet = require("helmet");
+const morgan = require("morgan");
 const app = express();
 
-// Load ENV Variables
+//Middlewares
 require("dotenv").config();
 app.use(express.json());
+app.use(helmet());
+app.use(morgan("common"));
 
 /************************* 
 		Connect to the DB 
@@ -14,10 +18,16 @@ connection();
 /*******************************
 		Import Routes
 *******************************/
+const postsRoute = require("./app/routes/posts");
+const userRoute = require("./app/routes/users");
+const authRoute = require("./app/routes/auth");
 
 /*******************************
 		Initialize Routes
 *******************************/
+app.use("/api/posts", postsRoute);
+app.use("/api/users", userRoute);
+app.use("/api/auth", authRoute);
 
 /*******************************
 		Set port, listen for requests
